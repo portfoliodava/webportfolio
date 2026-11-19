@@ -20,12 +20,14 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+html { scroll-behavior: smooth; scroll-padding-top: 100px; max-width: 100%; overflow-x: clip; }
 body {
   font-family: 'DM Sans', sans-serif;
   color: var(--ink);
   background: var(--paper);
   line-height: 1.65;
+  max-width: 100%;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; text-decoration: none; }
@@ -117,10 +119,27 @@ button { font: inherit; }
   z-index: -1;
   width: 420px;
   height: 420px;
-  right: -110px;
+  right: 0;
   top: 80px;
+  max-width: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(214,168,79,.12), transparent 68%);
+  background: radial-gradient(circle, rgba(214,168,79,.16), rgba(214,168,79,.035) 42%, transparent 70%);
+  animation: glow-drift 24s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 260px;
+  height: 260px;
+  left: -120px;
+  bottom: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(119,153,184,.12), transparent 70%);
+  filter: blur(8px);
+  animation: glow-drift 30s ease-in-out infinite alternate-reverse;
+  pointer-events: none;
 }
 .hero-text { max-width: 650px; }
 .hero-role, .eyebrow {
@@ -208,7 +227,9 @@ section h2 {
   grid-template-columns: 1.1fr .9fr;
   gap: 90px;
   color: white;
-  background: var(--navy);
+  background: radial-gradient(ellipse at 15% 20%, rgba(74,103,137,.22), transparent 42%), radial-gradient(ellipse at 85% 80%, rgba(214,168,79,.09), transparent 38%), var(--navy);
+  background-size: 150% 150%;
+  animation: background-breathe 32s ease-in-out infinite alternate;
 }
 .skills .eyebrow { color: var(--gold); margin-bottom: 18px; }
 .skills-left h2 { margin-bottom: 22px; color: white; }
@@ -233,7 +254,7 @@ section h2 {
 .bar-fill { height: 100%; background: linear-gradient(90deg, #bd8d3b, #e7c477); border-radius: 20px; }
 
 /* TECH */
-.tech { background: var(--paper); text-align: center; }
+.tech { background: radial-gradient(ellipse at 12% 18%, rgba(214,168,79,.075), transparent 34%), radial-gradient(ellipse at 90% 78%, rgba(121,153,181,.09), transparent 36%), var(--paper); background-size: 160% 160%; animation: background-breathe 38s ease-in-out infinite alternate-reverse; text-align: center; }
 .tech .eyebrow, .experience .eyebrow, .education .eyebrow { margin-bottom: 15px; }
 .tech h2 { margin-bottom: 48px; }
 .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 19px; max-width: var(--content); margin: 0 auto; text-align: left; }
@@ -288,7 +309,7 @@ section h2 {
 .hobi-chip { padding: 8px 14px; color: #5f6876; background: #f4f5f7; border: 1px solid var(--line); border-radius: 30px; font-size: 11px; }
 
 /* CONTACT */
-.contact { position: relative; overflow: hidden; color: white; background: var(--navy); }
+.contact { position: relative; overflow: hidden; color: white; background: radial-gradient(ellipse at 85% 20%, rgba(77,107,143,.2), transparent 42%), radial-gradient(ellipse at 10% 100%, rgba(214,168,79,.08), transparent 38%), var(--navy); background-size: 160% 160%; animation: background-breathe 34s ease-in-out infinite alternate; }
 .contact::after { content: 'HELLO'; position: absolute; right: -15px; bottom: -90px; color: rgba(255,255,255,.035); font-family: 'Manrope', sans-serif; font-size: clamp(130px, 24vw, 300px); font-weight: 800; line-height: 1; pointer-events: none; }
 .contact-text { position: relative; z-index: 1; max-width: 680px; }
 .contact .eyebrow { margin-bottom: 17px; color: var(--gold); }
@@ -313,6 +334,17 @@ section h2 {
 }
 .footer a { color: #e5c47e; font-weight: 700; }
 .footer a:hover { color: white; }
+
+/* SUBTLE AMBIENT MOTION — slow, low-contrast background movement */
+@keyframes glow-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: .72; }
+  50% { transform: translate3d(-12px, 10px, 0) scale(1.045); opacity: .9; }
+  100% { transform: translate3d(8px, -8px, 0) scale(.98); opacity: .76; }
+}
+@keyframes background-breathe {
+  0% { background-position: 0% 35%; }
+  100% { background-position: 100% 65%; }
+}
 
 /* REVEAL ANIMATION */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
@@ -351,13 +383,16 @@ section h2 {
   .nav a { padding: 12px 2px; border-bottom: 1px solid var(--line); }
   .nav a::after { display: none; }
   .btn-header { min-height: 40px; padding: 0 13px; font-size: 11px; }
-  .hero { min-height: auto; padding: 62px 23px 76px; grid-template-columns: 1fr; gap: 47px; text-align: left; }
+  .hero { min-height: auto; min-width: 0; width: 100%; padding: 62px 23px 76px; grid-template-columns: minmax(0, 1fr); gap: 47px; text-align: left; }
+  .hero::before { width: min(320px, 85vw); height: min(320px, 85vw); right: 0; top: 35px; }
+  .hero::after { width: 190px; height: 190px; left: -105px; bottom: 5px; }
   .hero-role { font-size: 9px; letter-spacing: .12em; }
   .hero h1 { font-size: clamp(42px, 12vw, 58px); }
   .hero-desc { font-size: 13px; }
   .hero-buttons { gap: 10px; }
   .btn { min-height: 45px; padding: 0 17px; font-size: 12px; }
-  .hero-photo { width: 100%; }
+  .hero-photo { width: 100%; min-width: 0; }
+  .hero-text, .skills-left, .skills-right, .tech-card, .exp-card, .edu-card { min-width: 0; }
   .hexagon { width: min(82vw, 340px); height: min(94vw, 370px); }
   .photo-caption { right: 0; bottom: 20px; padding: 10px 12px; font-size: 8px; }
   .section-pad { padding: 72px 23px; }
@@ -372,10 +407,12 @@ section h2 {
   .education h2 { margin-bottom: 30px; }
   .hobi { gap: 7px; }
   .contact h2 { font-size: 46px; }
+  .contact::after { right: 0; font-size: 24vw; }
   .footer { min-height: 76px; flex-direction: column; justify-content: center; gap: 6px; padding: 18px 22px; text-align: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .reveal { opacity: 1; transform: none; }
+  .hero::before, .hero::after, .skills, .tech, .contact { animation: none !important; }
 }
